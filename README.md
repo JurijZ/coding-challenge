@@ -1,3 +1,9 @@
+# Solution explained
+It's a console app on dotnet core 3.1
+Add cases to the Input.csv file. Preserve the same input data format.
+Output is printed out to the console.
+
+
 # StratumFive - Coding Challenge
 
 ## Introduction
