@@ -15,19 +15,55 @@ namespace ships
             List<Ship> ships = GetShips(filePath);
 
             List<string> outputs = new List<string>();
+            List<string> warnings = new List<string>();
 
             foreach(var ship in ships)
             {
                 foreach(char step in ship.steps)
                 {
-                    ship.position = CalculateNewPosition(ship.position, step);
+                    string newPosition = CalculateNewPosition(ship.position, step);
+
+                    // Check if the ship bridged worlds boundary
+                    if (BouundaryCheck(ship.position, mapSize))
+                    {
+                        warnings.Add(newPosition.Substring(0, 3));
+                        ship.position = ship.position + " LOST";                        
+                        break;
+                    }
+
+                    // Check warnings to prevent ships from falling at the same move
+                    if (warnings.Contains(newPosition.Substring(0, 3)))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        ship.position = newPosition;
+                    }                    
                 }
 
                 // final position
                 outputs.Add(ship.position);
             }
-            
-            Console.WriteLine("Completed");            
+
+            outputs.ForEach(Console.WriteLine);          
+        }
+
+        public static bool BouundaryCheck(string position, string mapSize)
+        {
+            if ((int)position[0] > (int)mapSize[0]
+                || (int)position[0] < 0
+                || (int)position[2] > (int)mapSize[2]
+                || (int)position[2] < 0
+                )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
 
         public static string Forward(string position)
@@ -40,7 +76,7 @@ namespace ships
             }
             else if (position[4] == 'N')
             {
-                sb[3] = (char)((int)position[3] + 1);
+                sb[2] = (char)((int)position[2] + 1);
             }
             else if (position[4] == 'W')
             {
@@ -48,7 +84,7 @@ namespace ships
             }
             else
             {
-                sb[3] = (char)((int)position[3] - 1);
+                sb[2] = (char)((int)position[2] - 1);
             }
 
             return sb.ToString();
