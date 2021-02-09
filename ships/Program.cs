@@ -23,23 +23,21 @@ namespace ships
                 {
                     string newPosition = CalculateNewPosition(ship.position, step);
 
+                    // Check warnings to prevent ships from falling at the same move
+                    if (warnings.Contains(newPosition.Substring(0, 3)))
+                    {
+                        continue;
+                    }
+
                     // Check if the ship bridged worlds boundary
-                    if (BouundaryCheck(ship.position, mapSize))
+                    if (BouundaryCheck(newPosition, mapSize))
                     {
                         warnings.Add(newPosition.Substring(0, 3));
                         ship.position = ship.position + " LOST";                        
                         break;
                     }
 
-                    // Check warnings to prevent ships from falling at the same move
-                    if (warnings.Contains(newPosition.Substring(0, 3)))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        ship.position = newPosition;
-                    }                    
+                    ship.position = newPosition;
                 }
 
                 // final position
